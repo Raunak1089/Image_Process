@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+<body>
+
+<input type="file" accept="image/*" name="image" id="file" onchange="x(event)" style="display: none;">
+<label for="file" style="width:fit-content; border-radius: 50px; background: black; color: white; padding: 5px;">Select Image from Storage</label>
+
+<p><img style= "margin: auto;" width="400" height="400" id="picture" /></p>
+
+<canvas id="myCanvas" width="400" height="400" style="border:1px solid #d3d3d3; display: none;">
+</canvas>
+
+<div id="result">
+    <p>Result:</p>
+    <img style= "margin: auto;" width="400" height="400" id="target" />
+</div>
+
+</body>
+</html>
