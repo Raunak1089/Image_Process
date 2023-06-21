@@ -12,6 +12,12 @@ Original:<p><img style= "margin: auto;" width="400" height="400" id="picture" />
 <p>
 <input type="number" id="scl_w" min="1" placeholder="Required width in px" oninput="change()" />
 <input type="number" id="scl_h" min="1" placeholder="Required height in px" oninput="change()" />
+<div style="
+    transform: translate(-50%,-100%);
+    margin-top: -200px;
+    margin-left: 200px;
+    position: absolute;
+">Drag and drop image here</div>
 </p>
 
 <canvas id="myCanvas" width="400" height="400" style="border:1px solid #d3d3d3; display: none;">
@@ -39,6 +45,7 @@ picture.ondrop = function(e3) {
     
   if (items[0].type.indexOf('image/') === 0) {
     picture.src = URL.createObjectURL(items[0].getAsFile());
+    document.querySelector('p > div').style.display='none';
   }
 }
 
