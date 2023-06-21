@@ -1,21 +1,104 @@
 <!DOCTYPE html>
-<html>
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes">
+<html lang="en">
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta charset="UTF-8">
+  <title>Image Process</title>
+  <style>
+    body{
+      overflow: hidden;
+    }
+    .btn-container{
+      height: 100vh;
+    }
+    .custom-select{
+        width: 150px;
+        font-size: 1.2em;
+        padding: 5px;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+    }
+    iframe{
+      width: 100%;
+      height: 100%;      
+    }
+    h3{
+      margin: 20px;
+      padding: 10px;
+      width: fit-content;
+      border: 1px solid;
+      border-radius: 10px;
+      text-align: center;
+      background: wheat;
+    }
+  </style>
+</head>
 <body>
+  <div id="root"></div>
+  <script src="https://unpkg.com/react@18/umd/react.development.js" crossorigin></script>
+  <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js" crossorigin></script>
+  <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  <script src="https://raunak1089.github.io/all_scripts/disablescroll.js"></script>
+  <script type="text/babel">
+    const { useState } = React;
 
-<input type="file" accept="image/*" name="image" id="file" onchange="x(event)" style="display: none;">
-<label for="file" style="width:fit-content; border-radius: 50px; background: black; color: white; padding: 5px;">Select Image from Storage</label>
+    function App() {
+        const [task, setTask] = useState("0");
 
-<p><img style= "margin: auto;" width="400" height="400" id="picture" /></p>
+      function changeBG(event) {
+        setTask(event.target.value);
+      }
 
-<canvas id="myCanvas" width="400" height="400" style="border:1px solid #d3d3d3; display: none;">
-</canvas>
 
-<div id="result">
-    <p>Result:</p>
-    <img style= "margin: auto;" width="400" height="400" id="target" />
-</div>
+    return (
+        <div className="container">
+          <div className="custom-select">
+            <input
+              type="radio"
+              name="task"
+              value="Compress"
+              onChange={changeBG}
+            />
+            <label htmlFor="compress">Compress</label>
+            <br></br>
+            <input
+              type="radio"
+              name="task"
+              value="Negative"
+              onChange={changeBG}
+            />
+            <label htmlFor="negative">Negative</label>
+            <br></br>
+            <input
+              type="radio"
+              name="task"
+              value="BW"
+              onChange={changeBG}
+            />
+            <label htmlFor="bw">B/W</label>
+          </div>
 
-<script src="javascript.js"></script>
+          <div className="btn-container">
+            {
+              task === "Compress" ? (
+                <iframe src="happyCompress.html" title="Happy Compress" frameBorder="0" />
+              ) : task === "Negative" ? (
+                <iframe src="neg.html" title="Neg" frameBorder="0" />
+              ) : task === "BW" ? (
+                <iframe src="blackWhite.html" title="Black White" frameBorder="0" />
+              ) : (
+                <h3>Please choose a task for your Image!</h3>
+              )
+            }
+          </div>
+
+
+        </div>
+      );
+    }
+
+    ReactDOM.render(<App />, document.getElementById('root'));
+  </script>
 </body>
 </html>
