@@ -33,6 +33,7 @@ Original:<p><img style= "margin: auto;" width="400" height="400" id="picture" />
 
 function x(event) {
 	picture.src = URL.createObjectURL(event.target.files[0]);
+	document.querySelector('p > div').style.display='none';
 };
 
 picture.ondragover = function(e2) {
