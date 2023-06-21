@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html>
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+<body>
+
+<input type="file" accept="image/*" name="image" id="file" onchange="x(event)" style="display: none;">
+<label for="file" style="width:fit-content; border-radius: 50px; background: black; color: white; padding: 5px;">Select Image from Storage</label>
+
+<p>
+Original:<p><img style= "margin: auto;" width="400" height="400" id="picture" /></p><span id="orgRes"></span>
+
+<p>
+<input type="number" id="scl_w" min="1" placeholder="Required width in px" oninput="change()" />
+<input type="number" id="scl_h" min="1" placeholder="Required height in px" oninput="change()" />
+</p>
+
+<canvas id="myCanvas" width="400" height="400" style="border:1px solid #d3d3d3; display: none;">
+</canvas>
+
+<div id="result">
+    <p>Result:</p>
+    <img style= "margin: auto;" width="400" height="400" id="target" />
+</div>
+<p><span id="convRes"></span></p>
+
+<script>
+
+function x(event) {
+	picture.src = URL.createObjectURL(event.target.files[0]);
+};
+
+picture.ondragover = function(e2) {
+      e2.preventDefault();
+    };
+  
+picture.ondrop = function(e3) {
+  let items = e3.dataTransfer.items;
+  e3.preventDefault();
+    
+  if (items[0].type.indexOf('image/') === 0) {
+    picture.src = URL.createObjectURL(items[0].getAsFile());
+  }
+}
+
+
+picture.onload = function() {
+  let canvas = document.getElementById("myCanvas");
+  let ctx = canvas.getContext("2d");
+  this.height = this.width*this.naturalHeight/this.naturalWidth;
+
+  canvas.width = this.naturalWidth;   //1350
+  canvas.height = this.naturalHeight;  //900
+
+  ctx.drawImage(this, 0, 0, canvas.width, canvas.height);
+
+
+// DATAURL: Actual image generation via data url
+
+target.src = canvas.toDataURL();
+target.height = target.width*canvas.height/canvas.width;
+target.style.border='2px solid black';
+
+document.getElementById("orgRes").innerHTML = 'Orientation: '+this.naturalWidth+' &times; '+this.naturalHeight;
+document.getElementById("convRes").innerHTML = 'Orientation: '+canvas.width+' &times; '+canvas.height;
+};
+
+let scl_w, scl_h;
+function change() {
+  let canvas = document.getElementById("myCanvas");
+  let ctx = canvas.getContext("2d");
+
+  if (document.getElementById('scl_w').value == '' && document.getElementById('scl_h').value != '') {
+    scl_w = picture.naturalWidth * Number(document.getElementById('scl_h').value) / picture.naturalHeight;
+  } else {scl_w = Number(document.getElementById('scl_w').value)};
+
+  if (document.getElementById('scl_h').value == '' && document.getElementById('scl_w').value != '') {
+    scl_h = picture.naturalHeight * Number(document.getElementById('scl_w').value) / picture.naturalWidth;
+  }
+  else {scl_h = Number(document.getElementById('scl_h').value)};
+
+  canvas.width = scl_w;   //1350
+  canvas.height = scl_h;  //900
+
+  ctx.drawImage(picture, 0, 0, canvas.width, canvas.height);
+
+
+// DATAURL: Actual image generation via data url
+
+target.src = canvas.toDataURL();
+target.height = target.width*canvas.height/canvas.width;
+target.style.border='2px solid black';
+document.getElementById("orgRes").innerHTML = 'Orientation: '+picture.naturalWidth+' &times; '+picture.naturalHeight;
+document.getElementById("convRes").innerHTML = 'Orientation: '+canvas.width+' &times; '+canvas.height;
+}
+
+</script>
+
+</body>
+</html>
