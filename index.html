@@ -57,7 +57,7 @@
             <input
               type="radio"
               name="task"
-              value="Compress"
+              value="compress"
               onChange={changeBG}
             />
             <label htmlFor="compress">Compress</label>
@@ -65,7 +65,7 @@
             <input
               type="radio"
               name="task"
-              value="Negative"
+              value="negative"
               onChange={changeBG}
             />
             <label htmlFor="negative">Negative</label>
@@ -73,22 +73,18 @@
             <input
               type="radio"
               name="task"
-              value="BW"
+              value="blackwhite"
               onChange={changeBG}
             />
-            <label htmlFor="bw">B/W</label>
+            <label htmlFor="blackwhite">B/W</label>
           </div>
 
           <div className="btn-container">
             {
-              task === "Compress" ? (
-                <iframe src="happyCompress.html" title="Happy Compress" frameBorder="0" />
-              ) : task === "Negative" ? (
-                <iframe src="neg.html" title="Neg" frameBorder="0" />
-              ) : task === "BW" ? (
-                <iframe src="blackWhite.html" title="Black White" frameBorder="0" />
-              ) : (
+              task === "0" ? (
                 <h3>Please choose a task for your Image!</h3>
+              ) : (
+                <iframe src={task+".html"} title="Image Process" frameBorder="0" />
               )
             }
           </div>
