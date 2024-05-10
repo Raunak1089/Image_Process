@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://raunak1089.github.io/all_scripts/fontawesome.js"></script>
+    <title>CamScanner</title>
+  </head>
+  <style>
+  body {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
+  label {
+    color: dodgerblue;
+    font-size: 2em;
+    cursor: pointer;
+  }
+
+  </style>
+<body>
+
+<input type="file" accept="image/*" name="image" id="file" onchange="putImage(event)" style="display: none;">
+<label for="file"><i class="fa-thin fa-file-arrow-up"></i></label>
+
+<select id="mode" onchange="processPicture(picture)">
+  <option value="0" selected>5 Shade Colour</option>
+  <option value="1">5 Shade BW</option>
+  <option value="2">Prominent</option>
+</select>
+
+<p>
+  <img style= "margin: auto;" width="400" height="400" id="picture" />
+  <!-- <div style="transform: translate(50%, 0%) translate(-40px, -230px);"
+  >DROP HERE</div> -->
+</p>
+
+<canvas id="myCanvas" width="400" height="400" style="border:1px solid #d3d3d3; display: none;">
+</canvas>
+
+<div id="result">
+    <p>Result:</p>
+    <img style= "margin: auto;" width="400" height="400" id="target" />
+</div>
+
+<script>
+
+var canvas = document.getElementById("myCanvas");
+var ctx = canvas.getContext("2d", { willReadFrequently: true });
+
+function putImage(event) {
+  picture.src = URL.createObjectURL(event.target.files[0]);
+}
+
+picture.ondragover = function (e2) {
+  e2.preventDefault();
+};
+  
+picture.ondrop = function(e3) {
+    var items = e3.dataTransfer.items;
+    e3.preventDefault();
+    
+    if (items[0].type.indexOf('image/') === 0) {
+    picture.src = URL.createObjectURL(items[0].getAsFile());
+    }
+}
+
+picture.onload = function() {
+  processPicture(this);
+};
+
+
+function processPicture(pic) {
+  let mode = document.querySelector('#mode').value;
+  let nw = pic.naturalWidth;   //1350
+  let nh = pic.naturalHeight;  //900
+  canvas.width = nw;
+  canvas.height = nh;
+  let aspect = nw / nh;
+  pic.height = pic.width / aspect;
+
+
+  ctx.drawImage(pic, 0, 0);
+  let imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+
+  for (let i = 0; i < imgData.data.length; i += 4) {
+        let gs_val = (imgData.data[i]+imgData.data[i+1]+imgData.data[i+2]) / 3;
+      if (mode == "0") {
+        imgData.data[i] = imgData.data[i] < 100 ? 0 : imgData.data[i] < 130 ? 130 : imgData.data[i] < 160 ? 160 : imgData.data[i] < 200 ? 200 : 255;
+        imgData.data[i+1] = imgData.data[i+1] < 100 ? 0 : imgData.data[i+1] < 130 ? 130 : imgData.data[i+1] < 160 ? 160 : imgData.data[i+1] < 200 ? 200 : 255;
+        imgData.data[i+2] = imgData.data[i+2] < 100 ? 0 : imgData.data[i+2] < 130 ? 130 : imgData.data[i+2] < 160 ? 160 : imgData.data[i+2] < 200 ? 200 : 255;
+      }
+      if (mode == "1") {
+        imgData.data[i] = gs_val < 100 ? 0 : gs_val < 130 ? 130 : gs_val < 160 ? 160 : gs_val < 200 ? 200 : 255;
+        imgData.data[i+1] = gs_val < 100 ? 0 : gs_val < 130 ? 130 : gs_val < 160 ? 160 : gs_val < 200 ? 200 : 255;
+        imgData.data[i+2] = gs_val < 100 ? 0 : gs_val < 130 ? 130 : gs_val < 160 ? 160 : gs_val < 200 ? 200 : 255;
+      }
+      if (mode =="2") {
+        imgData.data[i] = imgData.data[i] < 100 ? 0 : 255;
+        imgData.data[i+1] = imgData.data[i+1] < 100 ? 0 : 255;
+        imgData.data[i+2] = imgData.data[i+2] < 100 ? 0 : 255;
+      }
+    }
+  ctx.putImageData(imgData, 0, 0);
+
+// DATAURL: Actual image generation via data url
+
+  target.src = canvas.toDataURL();
+  target.width = pic.width;
+  target.height = pic.height;
+  target.style.border='2px solid black';
+  document.getElementById('result').appendChild(target);
+
+}
+
+</script>
+
+</body>
+</html>
